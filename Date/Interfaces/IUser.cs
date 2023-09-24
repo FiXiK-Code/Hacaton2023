@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 namespace MVP.Date.Interfaces
 {
-    public interface ITitle
+    public interface IUser
     {
-        public List<Title> GetTitles { get; }
+        public List<User> GetAllUsers { get; }
     }
 }

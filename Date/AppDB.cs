@@ -7,7 +7,10 @@ namespace MVP.Date
     {
         public AppDB(DbContextOptions<AppDB> options) : base(options) { }
         
-        public DbSet<Title> DBTitle { get; set; }
+        public DbSet<Task> DBTask { get; set; }
+        public DbSet<Material> DBMaterial { get; set; }
+        public DbSet<Project> DBProject { get; set; }
+        public DbSet<User> DBUser { get; set; }
 
     }
 }

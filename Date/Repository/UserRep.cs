@@ -5,15 +5,15 @@ using System.Linq;
 
 namespace MVP.Date.Repository
 {
-    public class TitleRep : ITitle
+    public class UserRep : IUser
     {
         private readonly AppDB _appDB;
 
-        public TitleRep(AppDB appDB)
+        public UserRep(AppDB appDB)
         {
             _appDB = appDB;
         }
 
-        public List<Title> GetTitles => _appDB.DBTitle.ToList();
+        public List<User> GetAllUsers => _appDB.DBUser.ToList();
     }
 }

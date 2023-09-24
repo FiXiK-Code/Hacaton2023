@@ -15,15 +15,20 @@ namespace MVP
         {
             services.AddControllers();
 
-            services.AddTransient<ITitle, TitleRep>();
+
+            services.AddTransient<IProject, ProjectRep>();
+            services.AddTransient<IMaterial, MaterialRep>();
+            services.AddTransient<ITask, TaskRep>();
+            services.AddTransient<IUser, UserRep>();
+
+
 
             services.AddDbContext<AppDB>(
                    options =>
                    {
-                       options.UseMySql($"server=localhost;userid=root;pwd=root;port=3306;database=geo_farm");
+                       options.UseMySql($"server=localhost;userid=root;pwd=root123456;port=3306;database=anilin_db");
                    });
 
-            // register Interfaces
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 
