@@ -5,14 +5,14 @@ namespace MVP.Date.Api
 {
     public class UserParam
     {
-        public string filter { get; set; }
-        public string token { get; set; }
+        public string filter { get; set; } = null;
+        public string token { get; set; } = null;
 
-        public int id { get; set; }
-        public string mail { get; set; }
-        public string name { get; set; }
-        public string seurname { get; set; }
-        public string post { get; set; }
-        public string passvord { get; set; }
+        public int id { get; set; } = 0;
+        public string mail { get; set; } = null;
+        public string name { get; set; } = null;
+        public string seurname { get; set; } = null;
+        public string post { get; set; } = null;
+        public string passvord { get; set; } = null;
     }
 }

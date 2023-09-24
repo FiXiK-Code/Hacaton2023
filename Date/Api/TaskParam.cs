@@ -5,35 +5,35 @@ namespace MVP.Date.Api
 {
     public class TaskParam
     {
-        public string filterTasks { get; set; }
-        public string[] filterSupervisor { get; set; }
-        public string token { get; set; }
+        public string filterTasks { get; set; } = null;
+        public string[] filterSupervisor { get; set; } = null;
+        public string token { get; set; } = null;
 
-        public int id { get; set; }
-        public string name { get; set; }
-        public int prijId { get; set; }
+        public int id { get; set; } = 0;
+        public string name { get; set; } = null;
+        public int prijId { get; set; } = 0;
 
-        public DateTime planStartDate { get; set; }
-        public DateTime factStartDate { get; set; }
+        public string planStartDate { get; set; } = null;
+        public string factStartDate { get; set; } = null;
 
-        public DateTime planFinishDate { get; set; }
-        public DateTime factFinishDate { get; set; }
+        public string planFinishDate { get; set; } = null;
+        public string factFinishDate { get; set; } = null;
 
-        public DateTime planPayDate { get; set; }
-        public DateTime factPayDate { get; set; }
+        public string planPayDate { get; set; } = null;
+        public string factPayDate { get; set; } = null;
 
-        public int planedPrice { get; set; }
-        public int factPrice { get; set; }
+        public int planedPrice { get; set; } = 0;
+        public int factPrice { get; set; } = 0;
 
-        public string parentTaskName { get; set; }
-        public int parentTaskId { get; set; }
+        public string parentTaskName { get; set; } = null;
+        public int parentTaskId { get; set; } = 0;
 
-        public List<string> materials { get; set; }
-        public List<string> necesseMaterials { get; set; }
+        public string materials { get; set; } = null;
+        public string necesseMaterials { get; set; } = null;
 
-        public string supervisor { get; set; }
+        public string supervisor { get; set; } = null;
 
-        public int planedMaterialPrice { get; set; }
-        public int factMaterialPrice { get; set; }
+        public int planMaterialPrice { get; set; } = 0;
+        public int factMaterialPrice { get; set; } = 0;
     }
 }

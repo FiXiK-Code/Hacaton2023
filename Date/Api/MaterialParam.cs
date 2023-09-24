@@ -21,8 +21,8 @@ namespace MVP.Date.Api
 
         public string status { get; set; }
 
-        public DateTime planPayDate { get; set; }
-        public DateTime factPayDate { get; set; }
+        public string planPayDate { get; set; }
+        public string factPayDate { get; set; }
 
         public int taskId { get; set; }
         public string taskName { get; set; }

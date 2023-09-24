@@ -5,25 +5,25 @@ namespace MVP.Date.Api
 {
     public class ProjParam
     {
-        public string filter { get; set; }
-        public string token { get; set; }
+        public string filter { get; set; } = null;
+        public string token { get; set; } = null;
 
-        public int id { get; set; }
-        public string name { get; set; }
-        public string adr { get; set; }
+        public int id { get; set; } = 0;
+        public string name { get; set; } = null;
+        public string adr { get; set; } = null;
 
-        public string supervisor { get; set; }
+        public string supervisor { get; set; } = null;
 
-        public DateTime planStartDate { get; set; }
-        public DateTime factStartDate { get; set; }
+        public string planStartDate { get; set; } = null;
+        public string factStartDate { get; set; } = null;
 
-        public DateTime planFinishDate { get; set; }
-        public DateTime factFinishDate { get; set; }
+        public string planFinishDate { get; set; } = null;
+        public string factFinishDate { get; set; } = null;
 
-        public int planWorkPrice { get; set; }
-        public int factWorkPrice { get; set; }
+        public int planWorkPrice { get; set; } = 0;
+        public int factWorkPrice { get; set; } = 0;
 
-        public int planMaterialPrice { get; set; }
-        public int factMaterialPrice { get; set; }
+        public int planMaterialPrice { get; set; } = 0;
+        public int factMaterialPrice { get; set; } = 0;
     }
 }
