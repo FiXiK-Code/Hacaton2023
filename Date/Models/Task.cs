@@ -8,8 +8,10 @@ namespace MVP.Date.Models
 		public int id { get; set; }
 		public string name { get; set; }
 		public int prijId { get; set; }
+		public string status { get; set; }
+        public string photoPath { get; set; }
 
-		public DateTime planStartDate { get; set; }
+        public DateTime planStartDate { get; set; }
         public DateTime factStartDate { get; set; }
 
         public DateTime planFinishDate { get; set; }

@@ -6,7 +6,7 @@ namespace MVP.Controllers
     {
         public IActionResult Index()
         {
-            var path = System.IO.Path.Combine("/home.php");
+            var path = System.IO.Path.Combine("/index.php");
 
             return File(path, "text/html");
         }

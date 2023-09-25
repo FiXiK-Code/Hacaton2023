@@ -1,0 +1,27 @@
+@font-face {
+    font-family: 'SovMod';
+    src: url('SovMod.woff2') format('woff2'),
+        url('SovMod.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Evolventa';
+    src: url('Evolventa-Bold.woff2') format('woff2'),
+        url('Evolventa-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Evolventa';
+    src: url('Evolventa-Regular.woff2') format('woff2'),
+        url('Evolventa-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+

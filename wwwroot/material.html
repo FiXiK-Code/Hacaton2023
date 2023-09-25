@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="38" height="49" viewBox="0 0 38 49" fill="none">
+                    <g opacity="0.7">
+                        <path
+                            d="M0.00503721 8.86887L0.00503721 29.2704H5.67747L5.67747 25.6434L14.5254 25.6434V29.2704H20.0895L20.0895 25.6434L38 25.6434V20.4297L20.0895 20.4297C20.0895 13.8091 19.2161 14.7 23.5834 14.7L38 14.7V10.4556C34.2086 10.3801 26.0969 10.4556 21.0596 10.4556C14.5254 10.4556 14.5254 10.4557 14.5254 15.8961V20.4297L5.67747 20.4297L5.67747 9.8C5.67747 4.45455 5.82254 4.45455 10.9182 4.45455L38 4.45455V0.028215L9.68528 0.028215C-0.539162 0.028215 0.00503721 -0.967337 0.00503721 8.86887Z"
+                            fill="#2F1818" />
+                        <path d="M14.451 37.6697L14.451 33.1186H20.0895V37.6697H14.451Z" fill="#2F1818" />
+                        <path d="M0.0050354 37.6697L0.0050354 33.1186H5.67747L5.67747 37.6697H0.0050354Z"
+                            fill="#2F1818" />
+                        <path
+                            d="M5.67747 45.1209L5.67747 41.557H0.0050354L0.0050354 45.1209C0.0050354 46.9141 1.29132 49 3.12181 49H16.5957C18.5251 49 20.0895 46.9163 20.0895 45.1209V41.557L14.5005 41.557V45.0245C14.5005 45.1016 14.4345 45.1209 14.4016 45.1209H7.32698H5.67747Z"
+                            fill="#2F1818" />
+                    </g>
+                </svg></a>
+        </div>
+        <div class="menu">
+            <a href="#">
+                <p class="menu_item">Главная</p>
+            </a>
+            <a href="#">
+                <p class="menu_item">О нас</p>
+            </a>
+            <a href="#">
+                <p class="menu_item">Проекты</p>
+            </a>
+            <div class="contact">
+                <p>8 800 555 35 35</p>
+            </div>
+        </div>
+
+    </header>
+    <main>
+        <div id="popup" class="popup">
+            <div class="popup-content__material-page">
+                <span class="close close-maeterial-popup" onclick="closePopup()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="28" viewBox="0 0 30 28" fill="none">
+                        <path opacity="0.8" d="M2 2L28 26M28 2L3.97468 26" stroke="black" stroke-width="4"/>
+                      </svg>
+                </span>
+                <div class="popup-title">
+                    <p><span class="popup-title_decoration popup-title_decoration_black">РЕДАКТИРОВАНИЕ </span> МАТЕРИАЛА</p>
+                </div>
+                <form class="form-popup form-popup_white" method="get">
+                    <div class="form-part">
+                        <label class="lable" for="Name">Название</label>
+                        <input class="input-long" type="text" id="Name" name="Name" required>
+                    </div>
+                    <div class="form-part">
+                        <label class="lable" for="provider">Поставщик</label>
+                            <select id="provider" class="status-list list_provider" name="provider">
+                                <option disabled selected hidden value="">Выберите опцию</option>
+                                <option value="first">Выполнено</option>
+                                <option value="second">Ожидание</option>
+                                <option value="third">Выполняется</option>
+                            </select>
+                    </div>
+                    <div class="form-part">
+                        <label class="lable" for="category">Категория</label>
+                        <div class="material-btn">Добавить +</div>
+                    </div>
+
+                    <div class="dop">
+                        <input class="material-select" type="text" id="nameCategory" name="nameCategory">
+                        <input class="input-long input-long_dop" type="text" id="category" name="category">
+                        <div class="btn-delete-material">X</div>
+                    </div>
+                    <div class="form-part">
+                        <label class="lable" for="count">Количество</label>
+                        <input class="input-long" type="text" id="count" name="count" required>
+                    </div>
+                    <div class="form-part">
+                        <label class="lable" for="provider">Ед. измирения</label>
+                            <select id="provider" class="status-list list_provider" name="provider">
+                                <option disabled selected hidden value="">Выберите ед</option>
+                                <option value="first">кг</option>
+                                <option value="second">т</option>
+                                <option value="third">см</option>
+                            </select>
+                    </div>
+                    <div class="footer-form">
+                        <select class="status-list list_provider form-material-status" name="choice">
+                            <option disabled selected hidden value="">Выберите статус</option>
+                            <option value="first">В наличии</option>
+                            <option value="second">Требуется закза</option>
+                            <option value="third">Ожидание поставки</option>
+                        </select>
+                        <button class="send-form-material" type="submit">Применить</button>
+                    </div>
+                    
+                </form>
+
+            </div>
+        </div>
+        <div class="material-baner">
+            <a href="#">
+                <div class="upper-text"><img src="icons/sc.svg" alt="&#8249;">вернуться на карточку проекта</div>
+            </a>
+            <div class="title title_page-maeterial">МАТЕРИАЛЫ</div>
+        </div>
+        <div class="content content_material-page">
+            <div class="list-box">
+                <select class="choice choice_material-page" name="choice">
+                    <option disabled selected hidden value="">Выберите опцию</option>
+                    <option value="first">First Value</option>
+                    <option value="second">Second Value</option>
+                    <option value="third">Third Value</option>
+                </select>
+            </div>
+            <div class="material-list">
+
+
+                <div onclick="openPopup()" class="card-material_new">
+                    <div><img src="icons/pluse.svg" alt="set">
+                        <p>НОВЫЙ ЗАКАЗ</p>
+                    </div>
+                </div>
+
+
+                <div class="card-material" style="background-color: #B26E65;">
+                    <img src="icons/setwhite.svg" alt="set">
+                    <p class="card-material-name">БЕТОН (в т)</p>
+                    <p class="info-material">Категория: <b>материалы</b></p>
+                    <p class="info-material">Количество: <b>35</b></p>
+                    <p class="info-material">Задача: <b>установка фундамента</b></p>
+                    <p class="info-material">Поставщик: <b>ООО Бетон-Плюс</b></p>
+                    <div class="card-material-status">
+                        ТРЕБУЕТСЯ ЗАКАЗ
+                    </div>
+                </div>
+                <div class="card-material" style="background-color: #3a3a3a;">
+                    <img src="icons/setwhite.svg" alt="set">
+                    <p class="card-material-name">БЕТОН (в т)</p>
+                    <p class="info-material">Категория: <b>материалы</b></p>
+                    <p class="info-material">Количество: <b>35</b></p>
+                    <p class="info-material">Задача: <b>установка фундамента</b></p>
+                    <p class="info-material">Поставщик: <b>ООО Бетон-Плюс</b></p>
+                    <div class="card-material-status">
+                        ТРЕБУЕТСЯ ЗАКАЗ
+                    </div>
+                </div>
+                <div class="card-material" style="background-color: #B26E65;">
+                    <img src="icons/setwhite.svg" alt="set">
+                    <p class="card-material-name">БЕТОН (в т)</p>
+                    <p class="info-material">Категория: <b>материалы</b></p>
+                    <p class="info-material">Количество: <b>35</b></p>
+                    <p class="info-material">Задача: <b>установка фундамента</b></p>
+                    <p class="info-material">Поставщик: <b>ООО Бетон-Плюс</b></p>
+                    <div class="card-material-status">
+                        ТРЕБУЕТСЯ ЗАКАЗ
+                    </div>
+                </div>
+                <div class="card-material" style="background-color: #B26E65;">
+                    <img src="icons/setwhite.svg" alt="set">
+                    <p class="card-material-name">БЕТОН (в т)</p>
+                    <p class="info-material">Категория: <b>материалы</b></p>
+                    <p class="info-material">Количество: <b>35</b></p>
+                    <p class="info-material">Задача: <b>установка фундамента</b></p>
+                    <p class="info-material">Поставщик: <b>ООО Бетон-Плюс</b></p>
+                    <div class="card-material-status">
+                        ТРЕБУЕТСЯ ЗАКАЗ
+                    </div>
+                </div>
+                <div class="card-material" style="background-color: #3a3a3a;">
+                    <img src="icons/setwhite.svg" alt="set">
+                    <p class="card-material-name">БЕТОН (в т)</p>
+                    <p class="info-material">Категория: <b>материалы</b></p>
+                    <p class="info-material">Количество: <b>35</b></p>
+                    <p class="info-material">Задача: <b>установка фундамента</b></p>
+                    <p class="info-material">Поставщик: <b>ООО Бетон-Плюс</b></p>
+                    <div class="card-material-status">
+                        ТРЕБУЕТСЯ ЗАКАЗ
+                    </div>
+                </div>
+                <div class="card-material" style="background-color: #B26E65;">
+                    <img src="icons/setwhite.svg" alt="set">
+                    <p class="card-material-name">БЕТОН (в т)</p>
+                    <p class="info-material">Категория: <b>материалы</b></p>
+                    <p class="info-material">Количество: <b>35</b></p>
+                    <p class="info-material">Задача: <b>установка фундамента</b></p>
+                    <p class="info-material">Поставщик: <b>ООО Бетон-Плюс</b></p>
+                    <div class="card-material-status">
+                        ТРЕБУЕТСЯ ЗАКАЗ
+                    </div>
+                </div>
+                <div class="card-material" style="background-color: #3a3a3a;">
+                    <img src="icons/setwhite.svg" alt="set">
+                    <p class="card-material-name">БЕТОН (в т)</p>
+                    <p class="info-material">Категория: <b>материалы</b></p>
+                    <p class="info-material">Количество: <b>35</b></p>
+                    <p class="info-material">Задача: <b>установка фундамента</b></p>
+                    <p class="info-material">Поставщик: <b>ООО Бетон-Плюс</b></p>
+                    <div class="card-material-status">
+                        ТРЕБУЕТСЯ ЗАКАЗ
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -11,6 +11,9 @@ namespace MVP.Date.Api
         public int id { get; set; } = 0;
         public string name { get; set; } = null;
         public string adr { get; set; } = null;
+        public string status { get; set; } = null;
+
+        public string photoPath { get; set; }
 
         public string supervisor { get; set; } = null;
 

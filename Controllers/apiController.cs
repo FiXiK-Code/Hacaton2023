@@ -8,6 +8,10 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
+using System.Security.Cryptography;
+using System.Threading.Tasks;
+using Task = MVP.Date.Models.Task;
 
 namespace MVP.Controllers
 {
@@ -27,12 +31,24 @@ namespace MVP.Controllers
             _proj = proj;
             _user = user;
         }
-        //add generate token
+
+        [HttpPost]
+        public JsonResult Test([FromBody] UserParam userParam)
+        {
+            var outt = new
+            {
+                message = "Пользователь успешно зарегистрирован!",
+                tasks = userParam
+            };
+
+            return new JsonResult(new ObjectResult(outt) { StatusCode = 200 });
+        }
+
         #region ////////////////// User functions
         /// <summary>
-        /// 
+        /// Метод для регистрация пользователя в системе
         /// </summary>
-        /// <param name="userParam"></param>
+        /// <param name="userParam">Обект предаствляющий входные данные</param>
         /// <returns></returns>
         [HttpPost]
         public JsonResult RegUser([FromBody] UserParam userParam)
@@ -60,6 +76,14 @@ namespace MVP.Controllers
                 return new JsonResult(new ObjectResult(new { message = "Поля не могут быть пустыми!" }) { StatusCode = 400 });
             }
 
+            string refrash_tpken = null;
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+                refrash_tpken = Convert.ToBase64String(randomNumber);
+            }
+
             var newUser = new User
             {
                 name = name,
@@ -67,7 +91,7 @@ namespace MVP.Controllers
                 mail = mail,
                 post = post,
                 passvord = pwd,
-                token = null//refresh
+                token = refrash_tpken
             };
             _user.AddToDb(user);
 
@@ -82,9 +106,9 @@ namespace MVP.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Метод для авторизации в системе
         /// </summary>
-        /// <param name="userParam"></param>
+        /// <param name="userParam">Обект предаствляющий входные данные</param>
         /// <returns></returns>
         [HttpPost]
         public JsonResult TryLogin([FromBody] UserParam userParam)
@@ -107,7 +131,15 @@ namespace MVP.Controllers
                 }
                 else
                 {
-                    user.token = null;//refresh
+                    string refrash_tpken = null;
+                    var randomNumber = new byte[32];
+                    using (var rng = RandomNumberGenerator.Create())
+                    {
+                        rng.GetBytes(randomNumber);
+                        refrash_tpken = Convert.ToBase64String(randomNumber);
+                    }
+
+                    user.token = refrash_tpken;
                     var outt = new
                     {
                         message = "Успешный вход!",
@@ -128,23 +160,93 @@ namespace MVP.Controllers
 
         #region ////////////////// Task functions
         /// <summary>
-        /// 
+        /// Метод для получения данных по задаче/задачам
         /// </summary>
-        /// <param name="taskParam"></param>
+        /// <param name="taskParam">Обект предаствляющий входные данные</param>
         /// <returns></returns>
         [HttpPost]
         public JsonResult GetTasks([FromBody] TaskParam taskParam)
         {
-            List<Task> array = _task.GetAllTasks;
+            bool admin = false;
+            User user = null;
+            try
+            {
+                user = _appDB.DBUser.FirstOrDefault(p => p.token == taskParam.token);
+                if (user != null && user != new User())
+                    admin = true;
+            }
+            catch (Exception) {  }
+
+            List<Task> array = new List<Task>();
 
             try
             {
-                
-            }
-            catch(Exception) { return new JsonResult(new ObjectResult(new {message = "Нет совпадений"}) { StatusCode = 400 }); }
+                if (taskParam.filterTasks != null)
+                {
+                    switch (taskParam.filterTasks)
+                    {
+                        case "Выполненные":
+                            array = _task.GetAllTasks.Where(p => p.status != "Завершен" && p.prijId == taskParam.prijId).OrderBy(p => p.planFinishDate.Date).ToList();
+                            break;
+                        case "Сначала текущие":
+                            array.AddRange(_task.GetAllTasks.Where(p => p.status == "В работе" && p.prijId == taskParam.prijId).OrderBy(p => p.planStartDate.Date).ToList());
+                            array.AddRange(_task.GetAllTasks.Where(p => p.status != "В работе" && p.prijId == taskParam.prijId).OrderBy(p => p.planStartDate.Date).ToList());
+                            break;
+                        case "Только текущие":
+                            array = _task.GetAllTasks.Where(p => p.status == "В работе" && p.prijId == taskParam.prijId).OrderBy(p => p.planStartDate.Date).ToList();
+                            break;
+                        case "Не хватает материалов или в ожидании поставки":
+                            array = _task.GetAllTasks.Where(p => (p.status == "Не хватает материалов" || p.status == "В ожидании поставки материалов") && p.prijId == taskParam.prijId).OrderBy(p => p.planStartDate.Date).ToList();
+                            break;
+                    }
+                    if (array.Count() != 0) array = array.Distinct().ToList();
+                    else
+                    {
+                        return new JsonResult(new ObjectResult(new { message = "Совпадений не найдено" }) { StatusCode = 200 });
+                    }
+                }
 
+                if (taskParam.filterSupervisor != null)
+                {
+                    List<Task> superArray = new List<Task>();
+                    foreach(var super in taskParam.filterSupervisor)
+                    {
+                        if(super.Trim() != "")
+                        {
+                            superArray.AddRange(array.Where(p => p.supervisor == super.Trim() && p.prijId == taskParam.prijId).ToList());
+                        }
+                    }
+                    if (superArray.Count() != 0) array = superArray.Distinct().ToList();
+                }
+
+                if(taskParam.filterTasks != null && taskParam.filterSupervisor == null)
+                {
+                    array = _task.GetAllTasks.Where(p => p.prijId == taskParam.prijId).ToList();
+                }
+
+            }
+            catch (Exception) { array = _task.GetAllTasks.Where(p => p.prijId == taskParam.prijId).ToList(); }
+
+            var materialWrning = false;
+            foreach (var task in array)
+            {
+                if(task.status == "Не хватает материалов")
+                {
+                    materialWrning = true;
+                }
+            }
+            try
+            {
+                var materials = _material.GetAllMaterials.Where(p => (p.planDeliveryDate - DateTime.Now) <= TimeSpan.FromDays(7) && (p.status == "Не хватает" || p.status == "В ожидании")).ToList();
+
+                if (materials.Count() != 0) materialWrning = true;
+            }
+            catch (Exception) { }
+            
             var outt = new
             {
+                admin = admin,
+                materialWrning = materialWrning,
                 tasks = array
             };
 
@@ -153,9 +255,9 @@ namespace MVP.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Метод для создания задачи
         /// </summary>
-        /// <param name="taskParam"></param>
+        /// <param name="taskParam">Обект предаствляющий входные данные</param>
         /// <returns></returns>
         [HttpPost]
         public JsonResult AddTask([FromBody] TaskParam taskParam)
@@ -186,11 +288,38 @@ namespace MVP.Controllers
                 planStartDate = DateTime.Parse(taskParam.planStartDate);
             }
             catch (Exception) { }
+            try
+            {
+                factStartDate = DateTime.Parse(taskParam.factStartDate);
+            }
+            catch (Exception) { }
+            try
+            {
+                planFinishDate = DateTime.Parse(taskParam.planFinishDate);
+            }
+            catch (Exception) { }
+            try
+            {
+                factFinishDate = DateTime.Parse(taskParam.factFinishDate);
+            }
+            catch (Exception) { }
+            try
+            {
+                planPayDate = DateTime.Parse(taskParam.planPayDate);
+            }
+            catch (Exception) { }
+            try
+            {
+                factPayDate = DateTime.Parse(taskParam.factPayDate);
+            }
+            catch (Exception) { }
 
+            var photo = _proj.GetProj(taskParam.prijId);
             
             var name = taskParam.name.Trim();
             var prijId = taskParam.prijId;
             var supervisor = taskParam.supervisor.Trim();
+            var status = taskParam.status.Trim();
             var planedPrice = taskParam.planedPrice;
             var factPrice = taskParam.factPrice;
             var parentTaskName = taskParam.parentTaskName?.Trim();
@@ -211,6 +340,8 @@ namespace MVP.Controllers
                 name = name,
                 prijId = prijId,
                 supervisor = supervisor,
+                status = status,
+                photoPath = photo.photoPath,
                 planStartDate = planStartDate,
                 factStartDate = factStartDate,
                 planFinishDate = planFinishDate,
@@ -238,9 +369,9 @@ namespace MVP.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Метод дял редактирования данных по задаче
         /// </summary>
-        /// <param name="taskParam"></param>
+        /// <param name="taskParam">Обект предаствляющий входные данные</param>
         /// <returns></returns>
         [HttpPost]
         public JsonResult RedactTask([FromBody] TaskParam taskParam)
@@ -267,6 +398,11 @@ namespace MVP.Controllers
             }
             catch (Exception) { return new JsonResult(new ObjectResult(new { message = "Указанная задача не найдена!" }) { StatusCode = 400 }); }
 
+            if (result.status == "Создана")
+            {
+                return new JsonResult(new ObjectResult(new { message = "Изменять выполненные задачи нельзя!" }) { StatusCode = 400 });
+            }
+
             var planStartDate = new DateTime(1, 1, 1);
             var factStartDate = new DateTime(1, 1, 1);
 
@@ -276,15 +412,41 @@ namespace MVP.Controllers
             var planPayDate = new DateTime(1, 1, 1);
             var factPayDate = new DateTime(1, 1, 1);
 
+
             try
             {
                 planStartDate = DateTime.Parse(taskParam.planStartDate);
             }
             catch (Exception) { }
-
-            if (!_task.RedactToDb(taskParam.id, taskParam.name,planStartDate, factStartDate, planFinishDate, factFinishDate, planPayDate, factPayDate, taskParam.planedPrice, taskParam.factPrice, taskParam.parentTaskName, taskParam.materials, taskParam.necesseMaterials, taskParam.supervisor, taskParam.planMaterialPrice, taskParam.factMaterialPrice))
+            try
             {
-                return new JsonResult(new ObjectResult(new { message = "Ошибка редактирования!" }) { StatusCode = 400 });
+                factStartDate = DateTime.Parse(taskParam.factStartDate);
+            }
+            catch (Exception) { }
+            try
+            {
+                planFinishDate = DateTime.Parse(taskParam.planFinishDate);
+            }
+            catch (Exception) { }
+            try
+            {
+                factFinishDate = DateTime.Parse(taskParam.factFinishDate);
+            }
+            catch (Exception) { }
+            try
+            {
+                planPayDate = DateTime.Parse(taskParam.planPayDate);
+            }
+            catch (Exception) { }
+            try
+            {
+                factPayDate = DateTime.Parse(taskParam.factPayDate);
+            }
+            catch (Exception) { }
+
+            if (!_task.RedactToDb(taskParam.id, taskParam.name, taskParam.status, planStartDate, factStartDate, planFinishDate, factFinishDate, planPayDate, factPayDate, taskParam.planedPrice, taskParam.factPrice, taskParam.parentTaskName, taskParam.materials, taskParam.necesseMaterials, taskParam.supervisor, taskParam.planMaterialPrice, taskParam.factMaterialPrice))
+            {
+                return new JsonResult(new ObjectResult(new { message = "Нет возможности изменить нанные! Проверьте связи с задачей или материалами!" }) { StatusCode = 400 });
             }
             else
             {
@@ -305,32 +467,193 @@ namespace MVP.Controllers
 
         #region ////////////////// Project functions
         /// <summary>
-        /// 
+        /// Метод для полечения данных графика по проекту
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult GetGraficData([FromBody] ProjParam projParam)
+        {
+            // get data
+            var material = _appDB.DBMaterial.Where(p=>p.projId == projParam.id);
+            int planMatCount = 0;
+            int factMatCount = 0;
+            int planMatPrice = 0;
+            int factMatPrice = 0;
+
+            var tasks = _appDB.DBTask.Where(p => p.prijId == projParam.id);
+            int planWorkPrice = 0;
+            int factWorkPrice = 0;
+
+            int planTask = 0;
+            int factTask = 0;
+
+            int completTask = 0;
+            int countTask = 0;
+            try
+            {
+                planMatCount = material.Select(p => p.planCount).Sum();
+            }
+            catch (Exception) { }
+            try
+            {
+                factMatCount = material.Select(p => p.factCount).Sum();
+            }
+            catch (Exception) { }
+            try
+            {
+                planMatPrice = material.Select(p => p.planPrice).Sum();
+            }
+            catch (Exception) { }
+            try
+            {
+                factMatPrice = material.Select(p => p.factPrice).Sum();
+            }
+            catch (Exception) { }
+
+            try
+            {
+                planWorkPrice = tasks.Select(p => p.planedPrice).Sum();
+            }
+            catch (Exception) { }
+            try
+            {
+                factWorkPrice = tasks.Select(p => p.factPrice).Sum();
+            }
+            catch (Exception) { }
+            try
+            {
+                planTask = tasks.Where(p => p.planFinishDate <= DateTime.Now).ToList().Count();
+            }
+            catch (Exception) { }
+            try
+            {
+                factTask = tasks.Where(p => p.factFinishDate <= DateTime.Now).ToList().Count();
+            }
+            catch (Exception) { }
+
+            try
+            {
+                completTask = tasks.Where(p => p.status == "Выполнена").Count();
+            }
+            catch (Exception) { }
+            try
+            {
+                countTask = tasks.Count();
+            }
+            catch (Exception) { }
+
+
+
+            var outt = new
+            {
+                planMaterial = planMatCount,
+                factMaterial = factMatCount,
+                planMatPrise = planMatPrice,
+                factMatPrise = factMatPrice,
+                planWorkPrice = planWorkPrice,
+                factWorkPrice = factWorkPrice,
+                planTask = planTask,
+                factTask = factTask,
+                completedTask = completTask,
+                allTask = countTask
+            };
+
+            return new JsonResult(new ObjectResult(outt) { StatusCode = 200 });
+        }
+
+
+        /// <summary>
+        /// Метод для получения данных по проекту/проектам
         /// </summary>
         /// <param name="projParam"></param>
         /// <returns></returns>
         [HttpPost]
         public JsonResult GetProj([FromBody] ProjParam projParam)
         {
-            List<Project> array = _proj.GetAllProjects;
-
+            bool admin = false;
+            User user = null;
             try
             {
-
+                user = _appDB.DBUser.FirstOrDefault(p => p.token == projParam.token);
+                if (user != null && user != new User())
+                    admin = true;
             }
-            catch (Exception) { return new JsonResult(new ObjectResult(new { message = "Нет совпадений" }) { StatusCode = 400 }); }
+            catch (Exception) { }
 
-            var outt = new
+
+            if (projParam.id != 0)
             {
-                tasks = array
-            };
+                Project proj = null;
+                try
+                {
+                    proj = _proj.GetProj(projParam.id);
+                }
+                catch (Exception)
+                {
+                    return new JsonResult(new ObjectResult(new { message = "Проект не найденv!" }) { StatusCode = 400 });
+                }
+                var outt = new
+                {
+                    project = proj
+                };
 
-            return new JsonResult(new ObjectResult(outt) { StatusCode = 200 });
+                return new JsonResult(new ObjectResult(outt) { StatusCode = 200 });
+            }
+            else
+            {
+                List<Project> array = new List<Project>();
+
+                try
+                {
+                    if (projParam.filter != null)
+                    {
+                        switch (projParam.filter)
+                        {
+                            case "Ближайшие по дате начала":
+                                array = _proj.GetAllProjects.Where(p => p.status != "Завершен").OrderBy(p => p.planStartDate.Date).ToList();
+                                break;
+                            case "Сначала просроченые":
+                                array.AddRange(_proj.GetAllProjects.Where(p => p.status != "Завершен" && (p.planFinishDate - DateTime.Now) <= TimeSpan.FromDays(7)).ToList());
+                                array.AddRange(_proj.GetAllProjects.Where(p => p.status != "Завершен" && (p.planFinishDate - DateTime.Now) > TimeSpan.FromDays(7)).ToList());
+                                break;
+                            case "Ближайшие по дате завершения":
+                                array = _proj.GetAllProjects.Where(p => p.status != "Завершен").OrderBy(p => p.planFinishDate.Date).ToList();
+                                break;
+                            case "Выполненные":
+                                array = _proj.GetAllProjects.Where(p => p.status == "Завершен").OrderBy(p => p.planStartDate.Date).ToList();
+                                break;
+                            case "Активные":
+                                array = _proj.GetAllProjects.Where(p => p.status != "Создан" && p.status != "Выпоолнена").OrderBy(p => p.planStartDate.Date).ToList();
+                                break;
+                        }
+                        if (array.Count() != 0) array = array.Distinct().ToList();
+                        else
+                        {
+                            return new JsonResult(new ObjectResult(new { message = "Совпадений не найдено" }) { StatusCode = 200 });
+                        }
+                    }
+                    else
+                    {
+                        array = _proj.GetAllProjects;
+                    }
+
+                }
+                catch (Exception) { array = _proj.GetAllProjects; }
+
+                var outt = new
+                {
+                    admin = admin,
+                    projects = array
+                };
+
+                return new JsonResult(new ObjectResult(outt) { StatusCode = 200 });
+            }
 
         }
 
+
         /// <summary>
-        /// 
+        /// Метод для создания проекта
         /// </summary>
         /// <param name="projParam"></param>
         /// <returns></returns>
@@ -361,11 +684,27 @@ namespace MVP.Controllers
                 planStartDate = DateTime.Parse(projParam.planStartDate);
             }
             catch (Exception) { }
+            try
+            {
+                factStartDate = DateTime.Parse(projParam.factStartDate);
+            }
+            catch (Exception) { }
+            try
+            {
+                planFinishDate = DateTime.Parse(projParam.planFinishDate);
+            }
+            catch (Exception) { }
+            try
+            {
+                factFinishDate = DateTime.Parse(projParam.factFinishDate);
+            }
+            catch (Exception) { }
 
 
             var name = projParam.name.Trim();
             var adr = projParam.adr.Trim();
             var supervisor = projParam.supervisor.Trim();
+            var pgotoPath = projParam.photoPath.Trim();
 
             var planWorkPrice = projParam.planWorkPrice;
             var factWorkPrice = projParam.factWorkPrice;
@@ -391,7 +730,9 @@ namespace MVP.Controllers
                 planWorkPrice = planWorkPrice,
                 factWorkPrice = factWorkPrice,
                 planMaterialPrice = planMaterialPrice,
-                factMaterialPrice = factMaterialPrice
+                factMaterialPrice = factMaterialPrice,
+                photoPath = pgotoPath,
+                status = "Создан"
             };
             _proj.AddToDb(proj);
 
@@ -405,7 +746,7 @@ namespace MVP.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Метод дял редактирования поректа
         /// </summary>
         /// <param name="projParam"></param>
         /// <returns></returns>
@@ -446,6 +787,21 @@ namespace MVP.Controllers
                 planStartDate = DateTime.Parse(projParam.planStartDate);
             }
             catch (Exception) { }
+            try
+            {
+                factStartDate = DateTime.Parse(projParam.factStartDate);
+            }
+            catch (Exception) { }
+            try
+            {
+                planFinishDate = DateTime.Parse(projParam.planFinishDate);
+            }
+            catch (Exception) { }
+            try
+            {
+                factFinishDate = DateTime.Parse(projParam.factFinishDate);
+            }
+            catch (Exception) { }
 
 
             var name = projParam.name.Trim();
@@ -464,12 +820,14 @@ namespace MVP.Controllers
                 planFinishDate,
                 factFinishDate,
                 projParam.name,
+                projParam.status,
                 projParam.adr,
                 projParam.supervisor,
                 projParam.planWorkPrice,
                 projParam.factWorkPrice,
                 projParam.planMaterialPrice,
-                projParam.factMaterialPrice
+                projParam.factMaterialPrice,
+                projParam.photoPath
             ))
             {
                 return new JsonResult(new ObjectResult(new { message = "Ошибка редактирования!" }) { StatusCode = 400 });
@@ -494,32 +852,103 @@ namespace MVP.Controllers
 
         #region ////////////////// Material function
         /// <summary>
-        /// 
+        /// Метод для получения  информации по материалу/материалам
         /// </summary>
         /// <param name="materialParam"></param>
         /// <returns></returns>
         [HttpPost]
         public JsonResult GetMaterial([FromBody] MaterialParam materialParam)
         {
-            List<Material> array = _material.GetAllMaterials;
-
+            bool admin = false;
+            User user = null;
             try
             {
-
+                user = _appDB.DBUser.FirstOrDefault(p => p.token == materialParam.token);
+                if (user != null && user != new User())
+                    admin = true;
             }
-            catch (Exception) { return new JsonResult(new ObjectResult(new { message = "Нет совпадений" }) { StatusCode = 400 }); }
+            catch (Exception) { }
 
-            var outt = new
+            if (materialParam.taskId == 0)
             {
-                tasks = array
-            };
+                List<Material> array = _material.GetAllMaterials;
 
-            return new JsonResult(new ObjectResult(outt) { StatusCode = 200 });
+                try
+                {
+
+                    try
+                    {//category
+                        if (materialParam.filterCategory != null && materialParam.filterCategory.Count() >= 1)
+                        {
+                            array = array.Where(p => materialParam.filterCategory.Contains(p.category)).ToList();
+                        }
+                    }
+                    catch (Exception) { }
+
+                    try
+                    {//provider
+                        if (materialParam.filterProvider != null && materialParam.filterProvider.Count() >= 1)
+                        {
+                            array = array.Where(p => materialParam.filterProvider.Contains(p.provider)).ToList();
+                        }
+                    }
+                    catch (Exception) { }
+
+                    try
+                    {//task
+                        if (materialParam.filterTask != null && materialParam.filterTask.Count() >= 1)
+                        {
+                            array = array.Where(p => materialParam.filterTask.Contains(p.taskName)).ToList();
+                        }
+                    }
+                    catch (Exception) { }
+
+                    try
+                    {
+                        if (materialParam.filterDate == "Сначала ближайшие")
+                        {
+                            array = array.OrderBy(p => p.planDeliveryDate.Date).ToList();
+                        }
+                    }
+                    catch (Exception) { }
+
+
+
+
+                    if (array.Count() != 0) array = array.Distinct().ToList();
+                    else
+                    {
+                        return new JsonResult(new ObjectResult(new { message = "Совпадений не найдено" }) { StatusCode = 400 });
+                    }
+
+
+                }
+                catch (Exception) { array = _material.GetAllMaterials; }
+                var outt = new
+                {
+                    admin = admin,
+                    materials = array
+                };
+
+                return new JsonResult(new ObjectResult(outt) { StatusCode = 200 });
+            }
+            else
+            {
+                List<Material> array = _material.GetAllMaterials.Where(p => p.taskId == materialParam.taskId).ToList();
+
+                var outt = new
+                {
+                    admin = admin,
+                    materials = array
+                };
+
+                return new JsonResult(new ObjectResult(outt) { StatusCode = 200 });
+            }
 
         }
 
         /// <summary>
-        /// 
+        /// Метод для добавления материала
         /// </summary>
         /// <param name="materialParam"></param>
         /// <returns></returns>
@@ -544,6 +973,11 @@ namespace MVP.Controllers
             try
             {
                 planPayDate = DateTime.Parse(materialParam.planPayDate);
+            }
+            catch (Exception) { }
+            try
+            {
+                factPayDate = DateTime.Parse(materialParam.factPayDate);
             }
             catch (Exception) { }
 
@@ -600,7 +1034,7 @@ namespace MVP.Controllers
         }
 
         /// <summary>
-        /// 
+        /// Метод для редактирования материала
         /// </summary>
         /// <param name="materialParam"></param>
         /// <returns></returns>
@@ -635,6 +1069,11 @@ namespace MVP.Controllers
             try
             {
                 planPayDate = DateTime.Parse(materialParam.planPayDate);
+            }
+            catch (Exception) { }
+            try
+            {
+                factPayDate = DateTime.Parse(materialParam.factPayDate);
             }
             catch (Exception) { }
 

@@ -12,6 +12,7 @@ namespace MVP.Date.Api
         public int id { get; set; } = 0;
         public string name { get; set; } = null;
         public int prijId { get; set; } = 0;
+        public string status { get; set; } = null;
 
         public string planStartDate { get; set; } = null;
         public string factStartDate { get; set; } = null;

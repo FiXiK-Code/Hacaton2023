@@ -20,6 +20,9 @@ namespace MVP.Date.Models
         public DateTime planPayDate { get; set; }
         public DateTime factPayDate { get; set; }
 
+        public DateTime planDeliveryDate { get; set; }
+        public DateTime factDeliveryDate { get; set; }
+
         public int taskId { get; set; }
         public string taskName { get; set; }
 

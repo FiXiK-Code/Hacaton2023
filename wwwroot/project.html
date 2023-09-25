@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="page2">
+    <header class="header header_white">
+        <div class="logo">
+            <a href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" width="38" height="49" viewBox="0 0 38 49" fill="none">
+                    <g opacity="0.7">
+                        <path
+                            d="M0.00503721 8.86887L0.00503721 29.2704H5.67747L5.67747 25.6434L14.5254 25.6434V29.2704H20.0895L20.0895 25.6434L38 25.6434V20.4297L20.0895 20.4297C20.0895 13.8091 19.2161 14.7 23.5834 14.7L38 14.7V10.4556C34.2086 10.3801 26.0969 10.4556 21.0596 10.4556C14.5254 10.4556 14.5254 10.4557 14.5254 15.8961V20.4297L5.67747 20.4297L5.67747 9.8C5.67747 4.45455 5.82254 4.45455 10.9182 4.45455L38 4.45455V0.028215L9.68528 0.028215C-0.539162 0.028215 0.00503721 -0.967337 0.00503721 8.86887Z"
+                            fill="white" />
+                        <path d="M14.451 37.6697L14.451 33.1186H20.0895V37.6697H14.451Z" fill="white" />
+                        <path d="M0.00500488 37.6697L0.00500488 33.1186H5.67744L5.67744 37.6697H0.00500488Z"
+                            fill="white" />
+                        <path
+                            d="M5.67744 45.1209L5.67744 41.557H0.00500488L0.00500488 45.1209C0.00500488 46.9141 1.29129 49 3.12178 49H16.5957C18.5251 49 20.0895 46.9163 20.0895 45.1209V41.557L14.5005 41.557V45.0245C14.5005 45.1016 14.4345 45.1209 14.4015 45.1209H7.32695H5.67744Z"
+                            fill="white" />
+                    </g>
+                </svg>
+            </a>
+        </div>
+        <div class="menu">
+            <a href="#">
+                <p class="menu_item">Главная</p>
+            </a>
+            <a href="#">
+                <p class="menu_item">О нас</p>
+            </a>
+            <a href="#">
+                <p class="menu_item">Проекты</p>
+            </a>
+            <div class="contact">
+                <p>8 800 555 35 35</p>
+            </div>
+        </div>
+
+    </header>
+    <main>
+        <div id="popup" class="popup">
+            <div class="popup-content">
+                <span class="close" onclick="closePopup()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="28" viewBox="0 0 30 28" fill="none">
+                        <path opacity="0.8" d="M2 2L28 26M28 2L3.97468 26" stroke="white" stroke-width="4" />
+                    </svg>
+                </span>
+                <div class="popup-title">
+                    <p><span class="popup-title_decoration">РЕДАКТИРОВАНИЕ</span> ЗАДАЧИ</p>
+                </div>
+                <form class="form-popup" method="get">
+                    <div class="form-part">
+                        <label class="lable" for="Name">Название</label>
+                        <input class="input-long" type="text" id="Name" name="Name" required>
+                    </div>
+                    <div class="form-part">
+                        <label class="lable" for="executor">Исполнитель</label>
+                        <input class="input-long" type="text" id="executor" name="executor" required>
+                    </div>
+                    <div class="form-part">
+                        <label class="lable" for="material">МАТЕРИАЛЫ</label>
+                        <div class="material-btn">Добавить +</div>
+                    </div>
+
+                    <div class="dop">
+                        <input class="material-select" type="text" id="nameMaterial" name="nameMaterial">
+                        <input class="input-long input-long_dop" type="text" id="material" name="material">
+                        <div class="btn-delete-material">X</div>
+                    </div>
+                    <div class="form-part">
+                        <div class="date">
+                            <label class="lable label-date" for="date-start_expected">ПРИМЕРНАЯ ДАТА НАЧАЛА:</label>
+                            <input type="date" id="date-start" name="date-start_expected">
+                        </div>
+                    </div>
+                    <div class="form-part">
+                        <div class="date">
+                            <label class="lable label-date" for="date-start_fact">ФАКТИЧЕСКАЯ ДАТА НАЧАЛА:</label>
+                            <input type="date" id="date-start" name="date-start_fact">
+                        </div>
+                    </div>
+                    <div class="form-part">
+                        <div class="date">
+                            <label class="lable label-date" for="date-end_expected">ПРИМЕРНАЯ ДАТА ОКОНЧАНИЯ:</label>
+                            <input type="date" id="date-start" name="date-end_expected">
+                        </div>
+                    </div>
+                    <div class="form-part">
+                        <div class="date">
+                            <label class="lable label-date" for="date-end_fact">ФАКТИЧЕСКАЯ ДАТА ОКОНЧАНИЯ:</label>
+                            <input type="date" id="date-start" name="date-end_fact">
+                        </div>
+                    </div>
+                    <div class="form-part">
+                        <label class="lable" for="task">НЕОБХОДИМО ВЫПОЛНИТЬ:</label>
+                        <div class="material-btn">Добавить +</div>
+                    </div>
+                    <div class="dop">
+                        <input class="material-select" id="nameTask" name="nameTask">
+                        <input class="input-long input-long_dop" type="text" id="task" name="task">
+                        <div class="btn-delete-material">X</div>
+                    </div>
+                    
+                    <div>
+                        <select class="status-list" name="choice">
+                            <option disabled selected hidden value="">Выберите опцию</option>
+                            <option value="first">Выполнено</option>
+                            <option value="second">Ожидание</option>
+                            <option value="third">Выполняется</option>
+                        </select>
+                        <button class="status-list" type="submit">Применить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="project-header">
+            <div class="project-name">
+                <p class="card-title card-title_page2">ЖК<br>ЖУРАВЛИК<br><span class="card-title-decorate">ул.Тимофея
+                        Чаркова 85-88</span></p>
+            </div>
+            <div class="project-price">
+                <div class="project-price_approximate">ПРИМЕРНАЯ СТОИМОСТЬ <b class="highlighting">84 000 000 ₽</b><br>
+                </div>
+                <div class="project-price_actual">ФАКТИЧЕСКАЯ СТОИМОСТЬ <b class="highlighting">₽</b></div>
+            </div>
+
+        </div>
+        <div class="content content_project">
+            <div class="charts">
+                <div class="chart-task">
+                    <p class="title title_task title_task__charts">ВЫПОЛНЕНО ЗАДАЧ <br>(4/30)</p>
+                </div>
+                <div class="project-date">
+                    <div class="project-card-info-title__chart">Дата <br>начала: </div>
+                    <div class="project-card-info-table">
+                        <table class="project-table">
+                            <tbody>
+                                <tr>
+                                    <th>Примерная</th>
+                                    <th>Фактическая</th>
+                                </tr>
+                                <tr>
+                                    <td>19.04.2023</td>
+                                    <td>27.04.2023</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="project-date">
+                    <div class="project-card-info-title__chart">Дата <br>окончания: </div>
+                    <div class="project-card-info-table">
+                        <table class="project-table">
+                            <tbody>
+                                <tr>
+                                    <th>Примерная</th>
+                                    <th>Фактическая</th>
+                                </tr>
+                                <tr>
+                                    <td>19.04.2023</td>
+                                    <td>27.04.2023</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="graphics">
+                    <div class="img-chart">
+                        <img src="icons/plusewhite.svg" alt="plus">
+                    </div>
+                    <div class="graphics-title">ВЫПОЛНЕНИЕ ПЛАНА</div>
+                </div>
+                <div class="example">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
+                        <path opacity="0.5" d="M15.5474 1H0.776733V16H15.5474V1Z" fill="#D9D9D9" stroke="#D9D9D9" />
+                    </svg>
+                    <p>ожидаемо</p>
+                </div>
+                <div class="example">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
+                        <path opacity="0.5" d="M15.5474 1H0.776733V16H15.5474V1Z" fill="#FF8574" stroke="#FF8574" />
+                    </svg>
+                    <p>фактически</p>
+                </div>
+                <div class="graphics-table">
+                    <div class="progress-bar " style="width: 533px;">
+                        <div class="progress-value chet" style="width: 200px;">
+                            <p>ОБЪЕМ МАТЕРИАЛОВ</p>
+                            <p>530</p>
+                        </div>
+                    </div>
+                    <div class="progress-bar" style="width: 200px;">
+                        <div class="progress-value nechet" style="width: 300px;">
+                            <p>в м³</p>
+                            <p>267</p>
+                        </div>
+                    </div>
+                    <div class="progress-bar" style="width: 1000px;">
+                        <div class="progress-value chet" style="width: 50%;">
+                            <p>СТОИМОСТЬ МАТЕРИАЛОВ</p>
+                            <p>3238102</p>
+                        </div>
+                    </div>
+                    <div class="progress-bar" style="width: 1000px;">
+                        <div class="progress-value nechet" style="width: 50%;;">
+                            <p>в ₽</p>
+                            <p>3782391</p>
+                        </div>
+                    </div>
+                    <div class="progress-bar" style="width: 1000px;">
+                        <div class="progress-value chet" style="width: 40%;">
+                            <p>СТОИМОСТЬ РАБОТ</p>
+                            <p>3238102</p>
+                        </div>
+                    </div>
+                    <div class="progress-bar" style="width: 1000px;">
+                        <div class="progress-value nechet" style="width: 20%;;">
+                            <p>в ₽</p>
+                            <p>3782391</p>
+                        </div>
+                    </div>
+                    <div class="progress-bar" style="width: 1000px;">
+                        <div class="progress-value chet" style="width: 20%;">
+                            <p>ПЛАН ВЫПОЛНЕННЫХ ЗАДАЧ</p>
+                            <p>30</p>
+                        </div>
+                    </div>
+                    <div class="progress-bar" style="width: 1000px;">
+                        <div class="progress-value nechet" style="width:4%;">
+                            <p>ед</p>
+                            <p>4</p>
+                        </div>
+                    </div>
+                    <div class="img-graphic">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="600px" height="100%" viewBox="0 0 477 524"
+                            fill="none">
+                            <path opacity="0.8"
+                                d="M469.094 1V509.637H0.944946M460.311 92.2504H476.56M460.311 199.554H476.56M460.311 319.532H476.56M460.311 437.819H476.56M0.944946 492.738V524M117.323 492.738V524M233.702 492.738V524M340.419 492.738V524M413.32 492.738V524M460.311 1H476.56"
+                                stroke="white"></path>
+                        </svg>
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div class="task-info">
+                <div class="materials">
+                    <div class="materials_header">
+                        <p class="title title_task">МАТЕРИАЛЫ</p>
+                        <a href="#" class="materials_btn"><button class="materials_btn">Подробнее ></button></a>
+                    </div>
+                    <div class="materials_body">
+                        <div class="item-material">
+                            <div class="material-name">
+                                <p>Бетон</p>
+                            </div>
+                            <div class="material-status">
+                                <p>Ожидается поставка (24.06.2023)</p>
+                            </div>
+                        </div>
+                        <div class="item-material">
+                            <div class="material-name material-name_second">
+                                <p>Стекло</p>
+                            </div>
+                            <div class="material-status material-name_second">
+                                <p>Нет в наличии</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="task">
+                    <p class="title title_task">Задачи</p>
+                    <div class="task-menu">
+                        <button onclick="openPopup()" class="btn-task">Добавить новую +</button>
+                        <select name="choice" class="choice">
+                            <option value="first">По дате</option>
+                            <option value="second" selected>Сначала выполненые</option>
+                        </select>
+                    </div>
+                    <div class="task-list">
+                        <div class="task-card">
+                            <img class="task-bg" src="img/task1.png" alt="task">
+                            <img class="task-now" src="img/apply.png" alt="task">
+
+                            <div class="task-card_left-part">
+                                <div class="task-name">ОЧИСКА ТЕРРИТОРИИ</div>
+                                <div class="task-executor">Исполнитель: <br><span class="task-executor_decor">Иванов
+                                        Иван Иванович</span></div>
+                            </div>
+                            <div class="task-card_right-part">
+                                <div class="task-info-name">Дата начала (примерная/фактическая):</div>
+                                <div class="task-date">19.04.2023 / 20.04.2023</div>
+                                <div class="task-info-name">Дата окончания (примерная/фактическая):</div>
+                                <div class="task-date">05.05.2023 / 05.05.2023</div>
+                            </div>
+                            <div class="task-status">Выполенено</div>
+                            <div class="task-props"><img src="icons/setwhite.svg" alt="setting"></div>
+                        </div>
+                        <div class="task-card">
+                            <img class="task-bg" src="img/task1.png" alt="task">
+                            <img class="task-now" src="img/apply.png" alt="task">
+
+                            <div class="task-card_left-part">
+                                <div class="task-name">ОЧИСКА ТЕРРИТОРИИ</div>
+                                <div class="task-executor">Исполнитель: <br><span class="task-executor_decor">Иванов
+                                        Иван Иванович</span></div>
+                            </div>
+                            <div class="task-card_right-part">
+                                <div class="task-info-name">Дата начала (примерная/фактическая):</div>
+                                <div class="task-date">19.04.2023 / 20.04.2023</div>
+                                <div class="task-info-name">Дата окончания (примерная/фактическая):</div>
+                                <div class="task-date">05.05.2023 / 05.05.2023</div>
+                            </div>
+                            <div class="task-status">Выполенено</div>
+                            <div class="task-props"><img src="icons/setwhite.svg" alt="setting"></div>
+                        </div>
+                        <div class="task-card">
+                            <img class="task-bg" src="img/task1.png" alt="task">
+                            <img class="task-now" src="img/apply.png" alt="task">
+
+                            <div class="task-card_left-part">
+                                <div class="task-name">ОЧИСКА ТЕРРИТОРИИ</div>
+                                <div class="task-executor">Исполнитель: <br><span class="task-executor_decor">Иванов
+                                        Иван Иванович</span></div>
+                            </div>
+                            <div class="task-card_right-part">
+                                <div class="task-info-name">Дата начала (примерная/фактическая):</div>
+                                <div class="task-date">19.04.2023 / 20.04.2023</div>
+                                <div class="task-info-name">Дата окончания (примерная/фактическая):</div>
+                                <div class="task-date">05.05.2023 / 05.05.2023</div>
+                            </div>
+                            <div class="task-status">Выполенено</div>
+                            <div class="task-props"><img src="icons/setwhite.svg" alt="setting"></div>
+                        </div>
+                        <div class="task-card">
+                            <img class="task-bg" src="img/task1.png" alt="task">
+                            <img class="task-now" src="img/task2.png" alt="task">
+                            <div class="task-card_left-part">
+                                <div class="task-name">ОЧИСКА ТЕРРИТОРИИ</div>
+                                <div class="task-executor">Исполнитель: <br><span class="task-executor_decor">Иванов
+                                        Иван Иванович</span></div>
+                            </div>
+                            <div class="task-card_right-part">
+                                <div class="task-info-name">Дата начала (примерная/фактическая):</div>
+                                <div class="task-date">19.04.2023 / 20.04.2023</div>
+                                <div class="task-info-name">Дата окончания (примерная/фактическая):</div>
+                                <div class="task-date">05.05.2023 / 05.05.2023</div>
+                            </div>
+                            <div class="task-status">Выполенено</div>
+                            <div class="task-props"><img src="icons/setwhite.svg" alt="setting"></div>
+                        </div>
+                        <div class="task-card">
+                            <img class="task-bg" src="img/task1.png" alt="task">
+                            <img class="task-now" src="img/task3.png" alt="task">
+                            <div class="task-card_left-part">
+                                <div class="task-name">ОЧИСКА ТЕРРИТОРИИ</div>
+                                <div class="task-executor">Исполнитель: <br><span class="task-executor_decor">Иванов
+                                        Иван Иванович</span></div>
+                            </div>
+                            <div class="task-card_right-part">
+                                <div class="task-info-name">Дата начала (примерная/фактическая):</div>
+                                <div class="task-date">19.04.2023 / 20.04.2023</div>
+                                <div class="task-info-name">Дата окончания (примерная/фактическая):</div>
+                                <div class="task-date">05.05.2023 / 05.05.2023</div>
+                            </div>
+                            <div class="task-status">Выполенено</div>
+                            <div class="task-props"><img src="icons/setwhite.svg" alt="setting"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="script.js"></script>
+</body>
+
+</html>

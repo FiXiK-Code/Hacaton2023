@@ -10,6 +10,7 @@ namespace MVP.Date.Interfaces
         public Task GetTask(int id);
         public bool RedactToDb(int id,
             string name,
+            string status,
             DateTime planStartDate,
             DateTime factStartDate,
             DateTime planFinishDate,
@@ -25,5 +26,6 @@ namespace MVP.Date.Interfaces
             int planedMaterialPrice,
             int factMaterialPrice);
         public void AddToDb(Task task);
+        public void RedactStatus(int id, string stat);
     }
 }

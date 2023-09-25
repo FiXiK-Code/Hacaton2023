@@ -14,12 +14,14 @@ namespace MVP.Date.Interfaces
             DateTime planFinishDate,
             DateTime factFinishDate,
             string name,
+            string status,
             string adr,
             string supervisor,
             int planWorkPrice,
             int factWorkPrice,
             int planMaterialPrice,
-            int factMaterialPrice);
+            int factMaterialPrice,
+            string photoPath);
 
         public void AddToDb(Project user);
     }

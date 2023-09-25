@@ -6,8 +6,10 @@ namespace MVP.Date.Models
 		public int id { get; set; }
 		public string name { get; set; }
 		public string adr { get; set; }
+        public string status { get; set; }
 
 		public string supervisor { get; set; }
+        public string photoPath { get; set; }
 
         public DateTime planStartDate { get; set; }
         public DateTime factStartDate { get; set; }
